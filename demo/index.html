@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; object-src 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo — Recepcionista IA para tu negocio</title>
+<meta name="description" content="Prueba cómo tu WhatsApp responde solo: precios, horarios y citas. Demo real de Brian Santos.">
+<meta name="theme-color" content="#059669">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kirixdj.github.io/money-demos/demo/">
+<meta property="og:title" content="Mira tu WhatsApp respondiendo solo (demo)">
+<meta property="og:description" content="Escribe el nombre de tu negocio y prueba el chat: precios, horarios y citas sin que nadie esté pendiente.">
+<meta property="og:image" content="https://kirixdj.github.io/money-demos/demo/capturas/demo-desktop.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root{
+    --bg:#f4f6f8; --card:#fff; --ink:#111827; --muted:#6b7280;
+    --green:#128c7e; --green-soft:#dcf8c6; --line:#e5e7eb; --accent:#0ea5a4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.45}
+  .wrap{max-width:1140px;margin:0 auto;padding:18px 16px 56px}
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  .brand{font-weight:800;letter-spacing:-.02em}
+  .brand span{color:var(--accent)}
+  .tag{font-size:12px;color:var(--muted);border:1px solid var(--line);background:#fff;
+       border-radius:999px;padding:5px 10px}
+  .intro h1{font-size:clamp(22px,4vw,34px);line-height:1.15;margin:6px 0 6px;letter-spacing:-.02em}
+  .intro p{color:var(--muted);margin:0 0 14px;max-width:70ch}
+  .namebox{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .namebox input{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:#fff}
+  .namebox button{padding:12px 18px;border:0;border-radius:12px;background:var(--ink);color:#fff;font-weight:700;cursor:pointer}
+  .grid{display:grid;grid-template-columns:1.16fr .84fr;gap:20px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(17,24,39,.06)}
+  /* ---- Página web de ejemplo (mini landing con estilo propio) ---- */
+  .site{background:linear-gradient(180deg,#ffffff 0%,#f0fdf4 100%)}
+  .site .hero{background:transparent;color:var(--ink);padding:20px 22px 6px}
+  .site .hero h2{margin:0 0 6px;font-size:clamp(21px,2.6vw,27px);letter-spacing:-.03em;color:#064e3b}
+  .site .hero p{margin:0 0 12px;color:#475569;font-size:13.5px;line-height:1.5}
+  .site-cta{display:inline-block;background:#ea580c;color:#fff;font-weight:800;padding:10px 14px;
+    border-radius:11px;text-decoration:none;font-size:13.5px;transition:background .18s ease}
+  .site-cta:hover{background:#c2410c}
+  .site-trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:#475569}
+  .site-body{padding:10px 22px 20px}
+  .site h3{margin:14px 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#047857}
+  .sitio-fila{display:flex;align-items:baseline;gap:8px;padding:7px 0;border-bottom:1px dashed #d1fae5}
+  .sitio-fila:last-child{border-bottom:0}
+  .sitio-fila b{font-size:13.5px;font-weight:650;color:#064e3b}
+  .sitio-fila b small{display:block;font-weight:400;color:#64748b;font-size:11px}
+  .sitio-puntos{flex:1;border-bottom:1px dotted #6ee7b7;transform:translateY(-3px);min-width:12px}
+  .sitio-precio{font-weight:800;color:#064e3b;font-size:13px;white-space:nowrap}
+  .sitio-linea{display:flex;gap:8px;color:#475569;font-size:12.5px;padding:4px 0;align-items:flex-start}
+  .site-fotos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 2px}
+  .site-fotos img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:12px;display:block;background:#d1fae5}
+  .sitio-linea:before{content:"";width:6px;height:6px;border-radius:50%;background:#059669;margin-top:6px;flex:none}
+  .footer-note{font-size:10.5px;color:#64748b;padding:10px 22px;border-top:1px solid #d1fae5;background:#fff}
+  /* ---- Chat ---- */
+  .chat{display:flex;flex-direction:column}
+  .chat-head{background:#075e54;color:#fff;padding:14px 16px;display:flex;gap:10px;align-items:center}
+  .avatar{width:38px;height:38px;border-radius:50%;background:#25d366;display:grid;place-items:center;font-weight:800;color:#075e54}
+  .chat-head b{display:block;font-size:15px}
+  .chat-head small{opacity:.85;font-size:12px}
+  .msgs{flex:1;padding:14px;background:#e5ddd5 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><circle cx='20' cy='20' r='1' fill='%23d8d0c7'/></svg>") repeat;
+         min-height:330px;max-height:430px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+  .b{max-width:82%;padding:9px 12px;border-radius:12px;font-size:14px;box-shadow:0 1px 1px rgba(0,0,0,.08);white-space:pre-wrap}
+  .bot{background:#fff;align-self:flex-start;border-top-left-radius:2px}
+  .user{background:var(--green-soft);align-self:flex-end;border-top-right-radius:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;border-top:1px solid var(--line);background:#fff}
+  .chip{border:1px solid var(--green);color:var(--green);background:#fff;border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer}
+  .chip:hover{background:#f0fdf9}
+  form.send{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:#f7f8f9}
+  form.send input{flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:999px;font-size:14px}
+  form.send button{width:42px;height:42px;border-radius:50%;border:0;background:var(--green);color:#fff;font-size:17px;cursor:pointer}
+  .sim{font-size:11px;color:var(--muted);padding:8px 14px;border-top:1px solid var(--line);background:#fff}
+  .toast{position:fixed;right:16px;bottom:16px;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;
+         font-size:13.5px;max-width:320px;box-shadow:0 12px 30px rgba(0,0,0,.25);opacity:0;transform:translateY(8px);
+         transition:.25s;pointer-events:none}
+  .toast.show{opacity:1;transform:none}
+  .close{margin-left:auto;font-size:15px;background:transparent;border:0;color:#fff;font-weight:700;padding:10px 14px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand"><a href="https://kirixdj.github.io/money-demos/" style="color:inherit;text-decoration:none">← Portafolio</a>
+      <span style="color:var(--muted);font-weight:400;font-size:13px;margin-left:10px">Demo · Recepcionista <span style="color:var(--accent)">IA</span></span></div>
+    <div class="tag">Simulación · sin conexión a internet</div>
+  </header>
+
+  <section class="intro">
+    <h1>Así se ve tu negocio con una página y un WhatsApp que responde solo.</h1>
+    <p>Escribe el nombre de tu negocio (o el de un prospecto) y prueba el chat. Las respuestas son de ejemplo: en el servicio real se cargan los precios, horarios y servicios del negocio.</p>
+    <div class="namebox">
+      <input id="negocio" value="Tu Clínica Dental" maxlength="40" aria-label="Nombre del negocio">
+      <button id="aplicar" type="button">Ver mi demo</button>
+    </div>
+  </section>
+
+  <div style="display:flex;justify-content:center;margin:0 0 18px">
+    <a id="ctaWa" href="#" style="background:#ea580c;color:#fff;text-decoration:none;font-weight:800;padding:13px 20px;border-radius:12px;font-size:15px">Quiero esto en mi negocio →</a>
+  </div>
+
+  <div class="grid">
+
+    <!-- ============ Página web de ejemplo ============ -->
+    <article class="panel site" aria-label="Página web de ejemplo">
+      <div class="hero">
+        <h2 id="siteNombre">Tu Clínica Dental</h2>
+        <p id="siteDescripcion">Odontología general y estética. Agenda tu cita por WhatsApp en menos de un minuto.</p>
+        <a class="site-cta" href="#chat">Escríbenos por WhatsApp</a>
+        <div class="site-trust"><span>● Responde al instante</span><span>● Sin llamadas</span><span>● Trato directo</span></div>
+      </div>
+      <div class="site-body">
+        <h3>Servicios y precios</h3>
+        <div id="siteServicios"></div>
+        <h3>Horario y ubicación</h3>
+        <div class="sitio-linea" id="siteHorario"></div>
+        <div class="sitio-linea" id="siteDireccion"></div>
+        <div class="sitio-linea" id="sitePagos"></div>
+        <div class="site-fotos" id="siteFotos"></div>
+      </div>
+      <div class="footer-note">Página de ejemplo con un negocio ficticio. El contenido final se personaliza con el cliente.</div>
+    </article>
+
+    <!-- ============ Chat simulado ============ -->
+    <article class="panel chat" id="chat" aria-label="Chat de WhatsApp simulado">
+      <div class="chat-head">
+        <div class="avatar" aria-hidden="true">IA</div>
+        <div>
+          <b id="chatNombre">Tu Clínica Dental</b>
+          <small>en línea · responde al instante</small>
+        </div>
+        <button class="close" id="reiniciar" type="button" title="Reiniciar demo">↺</button>
+      </div>
+      <div class="msgs" id="msgs" aria-live="polite"></div>
+      <div class="chips" id="chips"></div>
+      <form class="send" id="form">
+        <input id="texto" placeholder="Escribe como un cliente…" autocomplete="off" aria-label="Mensaje">
+        <button type="submit" aria-label="Enviar">➤</button>
+      </form>
+      <div class="sim">Simulación con fines de venta. El bot real usa la API oficial de WhatsApp Business.</div>
+    </article>
+
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="motor.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // TODO: cambiar por el número de WhatsApp de Brian (formato internacional, sin +).
+  var WHATSAPP = "18299893828"; // 829-989-3828
+
+  var msgs = document.getElementById("msgs");
+  var chips = document.getElementById("chips");
+  var texto = document.getElementById("texto");
+  var nombreInput = document.getElementById("negocio");
+  var negocio = nombreInput.value.trim() || "tu negocio";
+  var estado = {};
+
+  var PRESETS = {
+    clinica: {
+      nombre: "Tu Clínica Dental",
+      descripcion: "Odontología general y estética. Agenda tu cita por WhatsApp en menos de un minuto.",
+      horario: "Lunes a viernes: 8:00 a.m. – 6:00 p.m. · Sábado: 8:00 a.m. – 12:00 m.",
+      direccion: "Av. Principal 100, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo, tarjeta y transferencia",
+      servicios: [
+        { nombre: "Limpieza dental", precio: "RD$1,500", nota: "40 min" },
+        { nombre: "Consulta general", precio: "RD$800", nota: "20 min" },
+        { nombre: "Blanqueamiento", precio: "RD$6,500" }
+      ],
+      faqs: [{ preguntas: ["parqueo", "estacionamiento"], respuesta: "Hay parqueo gratuito al lado del edificio." }],
+      fotos: ["../plantillas/clinica/img/consultorio.jpg", "../plantillas/clinica/img/recepcion.jpg"]
+    },
+    salon: {
+      nombre: "Tu Salón",
+      descripcion: "Cortes, color y tratamientos. Reserva tu cita por WhatsApp y llega sin esperar.",
+      horario: "Martes a sábado: 9:00 a.m. – 7:00 p.m.",
+      direccion: "Calle Principal 45, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo y transferencia",
+      servicios: [
+        { nombre: "Corte y peinado", precio: "RD$1,200", nota: "1 hora" },
+        { nombre: "Tinte completo", precio: "RD$3,500", nota: "2 horas" },
+        { nombre: "Manicure y pedicure", precio: "RD$1,000" }
+      ],
+      faqs: []
+    },
+    restaurante: {
+      nombre: "Tu Restaurante",
+      descripcion: "Comida criolla para llevar y reservas. Pide por WhatsApp y recoge sin esperar.",
+      horario: "Lunes a sábado: 11:00 a.m. – 9:00 p.m.",
+      direccion: "Calle Principal 45, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo, transferencia y tarjeta al recoger",
+      servicios: [
+        { nombre: "Pollo guisado con moro", precio: "RD$350", nota: "almuerzo" },
+        { nombre: "Sancocho de pollo", precio: "RD$450", nota: "fin de semana" },
+        { nombre: "Chivo guisado", precio: "RD$550", nota: "para 2" }
+      ],
+      faqs: [{ preguntas: ["delivery", "domicilio", "entrega"], respuesta: "Entregamos a domicilio en La Romana con un cargo de RD$100." }],
+      fotos: ["../plantillas/restaurante/img/sancocho.jpg", "../plantillas/restaurante/img/pollo.jpg"]
+    },
+    hotel: {
+      nombre: "Tu Hotel",
+      descripcion: "Habitaciones frente a la marina. Reserva directo por WhatsApp, sin comisiones de terceros.",
+      horario: "Recepción 24 horas",
+      direccion: "Av. de la Marina 8, La Romana (dirección de ejemplo)",
+      pagos: "Tarjeta, transferencia y efectivo",
+      servicios: [
+        { nombre: "Habitación doble", precio: "RD$4,500", nota: "por noche" },
+        { nombre: "Suite vista marina", precio: "RD$7,800", nota: "por noche" },
+        { nombre: "Desayuno incluido", precio: "RD$500", nota: "por persona" }
+      ],
+      faqs: [{ preguntas: ["piscina", "playa"], respuesta: "Tenemos piscina y acceso a la playa a 300 metros." }],
+      fotos: ["../plantillas/hotel/img/habitacion.jpg", "../plantillas/hotel/img/piscina.jpg"]
+    },
+    ferreteria: {
+      nombre: "Tu Ferretería",
+      descripcion: "Materiales y herramientas. Consulta disponibilidad y precio por WhatsApp.",
+      horario: "Lunes a sábado: 8:00 a.m. – 5:00 p.m.",
+      direccion: "Av. Principal 210, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo, transferencia y tarjeta",
+      servicios: [
+        { nombre: "Cemento gris 42.5 kg", precio: "RD$520", nota: "saco" },
+        { nombre: "Bloque de 6", precio: "RD$45", nota: "unidad" },
+        { nombre: "Varilla 3/8", precio: "RD$380", nota: "unidad" }
+      ],
+      faqs: [{ preguntas: ["entrega", "flete", "envio"], respuesta: "Llevamos material con flete según la zona." }]
+    },
+    boutique: {
+      nombre: "Tu Boutique",
+      descripcion: "Ropa y accesorios. Consulta tallas y precios por WhatsApp.",
+      horario: "Lunes a sábado: 10:00 a.m. – 7:00 p.m.",
+      direccion: "Calle Principal 12, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo y transferencia",
+      servicios: [
+        { nombre: "Vestido casual", precio: "RD$2,200" },
+        { nombre: "Blusa de lino", precio: "RD$1,400" },
+        { nombre: "Set de accesorios", precio: "RD$900" }
+      ],
+      faqs: []
+    },
+    academia: {
+      nombre: "Tu Academia",
+      descripcion: "Clases y cursos. Inscripciones y horarios por WhatsApp.",
+      horario: "Lunes a viernes: 3:00 p.m. – 8:00 p.m.",
+      direccion: "Av. Principal 33, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo y transferencia",
+      servicios: [
+        { nombre: "Clases de matemáticas", precio: "RD$2,500", nota: "mensual" },
+        { nombre: "Curso de inglés", precio: "RD$3,200", nota: "mensual" },
+        { nombre: "Refuerzo escolar", precio: "RD$1,800", nota: "mensual" }
+      ],
+      faqs: [{ preguntas: ["inscripcion", "matricula"], respuesta: "La matrícula es RD$500 y las clases empiezan cada lunes." }]
+    },
+    gimnasio: {
+      nombre: "Tu Gimnasio",
+      descripcion: "Membresías y entrenamiento. Consulta horarios y precios por WhatsApp.",
+      horario: "Lunes a sábado: 5:00 a.m. – 10:00 p.m.",
+      direccion: "Av. Principal 88, La Romana (dirección de ejemplo)",
+      pagos: "Efectivo, transferencia y tarjeta",
+      servicios: [
+        { nombre: "Membresía mensual", precio: "RD$1,800" },
+        { nombre: "Entrenador personal", precio: "RD$1,200", nota: "por sesión" },
+        { nombre: "Plan 3 meses", precio: "RD$4,500" }
+      ],
+      faqs: []
+    }
+  };
+
+  function resolverRubro(parametro) {
+    var alias = { barberia: "salon", cafe: "restaurante", veterinaria: "clinica",
+                  "clinica dental": "clinica", "agencia de viajes": "hotel", inmobiliaria: "boutique" };
+    var clave = (parametro || "clinica").toLowerCase();
+    if (PRESETS[clave]) { return PRESETS[clave]; }
+    return PRESETS[alias[clave]] || PRESETS.clinica;
+  }
+
+  var parametro = new URLSearchParams(window.location.search).get("rubro");
+  var presetActual = resolverRubro(parametro);
+  var SUGERENCIAS = [];
+
+  function pintarSitio() {
+    document.getElementById("siteNombre").textContent = negocio;
+    document.getElementById("siteDescripcion").textContent = presetActual.descripcion;
+    document.getElementById("siteHorario").textContent = presetActual.horario;
+    document.getElementById("siteDireccion").textContent = presetActual.direccion;
+    document.getElementById("sitePagos").textContent = presetActual.pagos;
+    var cont = document.getElementById("siteServicios");
+    cont.innerHTML = "";
+    presetActual.servicios.forEach(function (s) {
+      var fila = document.createElement("div");
+      fila.className = "sitio-fila";
+      var b = document.createElement("b");
+      b.textContent = s.nombre;
+      if (s.nota) {
+        var small = document.createElement("small");
+        small.textContent = s.nota;
+        b.appendChild(small);
+      }
+      var puntos = document.createElement("span");
+      puntos.className = "sitio-puntos";
+      var precio = document.createElement("span");
+      precio.className = "sitio-precio";
+      precio.textContent = s.precio || "";
+      fila.appendChild(b); fila.appendChild(puntos); fila.appendChild(precio);
+      cont.appendChild(fila);
+    });
+    var fotos = document.getElementById("siteFotos");
+    fotos.innerHTML = "";
+    (presetActual.fotos || []).forEach(function (src) {
+      var img = document.createElement("img");
+      img.src = src;
+      img.alt = "Foto de referencia de " + negocio;
+      img.loading = "lazy";
+      fotos.appendChild(img);
+    });
+    SUGERENCIAS = [
+      "¿Cuánto cuesta " + presetActual.servicios[0].nombre.toLowerCase() + "?",
+      "¿Qué horario tienen?",
+      "Quiero una cita",
+      "¿Dónde están?"
+    ];
+  }
+
+  function burbuja(clase, textoPlano) {
+    var d = document.createElement("div");
+    d.className = "b " + clase;
+    d.textContent = textoPlano;
+    msgs.appendChild(d);
+    msgs.scrollTop = msgs.scrollHeight;
+    return d;
+  }
+
+  function bot(t) { burbuja("bot", t); }
+
+  function pintarChips() {
+    chips.innerHTML = "";
+    SUGERENCIAS.forEach(function (s) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = s;
+      b.addEventListener("click", function () { enviar(s); });
+      chips.appendChild(b);
+    });
+  }
+
+  function avisarDueno(resumen) {
+    var t = document.getElementById("toast");
+    t.textContent = "🔔 Aviso al dueño: " + resumen;
+    t.classList.add("show");
+    clearTimeout(avisarDueno._t);
+    avisarDueno._t = setTimeout(function () { t.classList.remove("show"); }, 5200);
+  }
+
+  function datosDemo() {
+    return {
+      negocio: negocio,
+      horario: presetActual.horario,
+      direccion: presetActual.direccion,
+      pagos: presetActual.pagos,
+      servicios: presetActual.servicios,
+      faqs: presetActual.faqs || []
+    };
+  }
+
+  // Usa el MISMO motor que el bot real (demo/motor.js, generado desde bot/responder.js).
+  function responder(entrada) {
+    var salida = window.Recepcionista.responder(entrada, datosDemo(), estado);
+    estado = salida.estado;
+    salida.respuestas.forEach(function (r) { bot(r); });
+    if (salida.avisarDueno) { avisarDueno(salida.motivo); }
+  }
+
+  function enviar(t) {
+    if (!t) return;
+    burbuja("user", t);
+    texto.value = "";
+    setTimeout(function () { responder(t); }, 520);
+  }
+
+  function arrancar() {
+    negocio = (nombreInput.value || "").trim() || presetActual.nombre;
+    document.getElementById("chatNombre").textContent = negocio;
+    pintarSitio();
+    msgs.innerHTML = "";
+    estado = {};
+    pintarChips();
+    setTimeout(function () {
+      bot("¡Hola! Soy la recepcionista virtual de " + negocio + ". ¿En qué te ayudo hoy?");
+      setTimeout(function () {
+        bot("Puedo responderte precios, horarios, ubicación y agendarte una cita, sin que nadie esté pendiente del teléfono.");
+      }, 450);
+    }, 150);
+  }
+
+  document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    enviar(texto.value.trim());
+  });
+  document.getElementById("aplicar").addEventListener("click", arrancar);
+  nombreInput.addEventListener("keydown", function (e) { if (e.key === "Enter") arrancar(); });
+  document.getElementById("reiniciar").addEventListener("click", arrancar);
+
+  // Botón de cierre: abre WhatsApp con el mensaje listo. Cambiar WHATSAPP arriba.
+  document.getElementById("ctaWa").href = "https://wa.me/" + WHATSAPP +
+    "?text=" + encodeURIComponent("Hola, vi el demo de la recepcionista IA y quiero saber cómo funciona para mi negocio.");
+
+  // Botón de la página de ejemplo: baja al chat con un mensaje de ejemplo.
+  document.querySelector(".site .site-cta").addEventListener("click", function (e) {
+    e.preventDefault();
+    enviar("Hola, quiero agendar una cita");
+    document.getElementById("chat").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  nombreInput.value = presetActual.nombre;
+  arrancar();
+})();
+</script>
+</body>
+</html>
