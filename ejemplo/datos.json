@@ -1,0 +1,14 @@
+{
+  "nombre": "El Fogón de Doña Rosa",
+  "descripcion": "Comida criolla para llevar y reservas. Pide por WhatsApp y recoge sin esperar.",
+  "whatsapp": "18299893828",
+  "horario": "lunes a sábado de 11:00 a.m. a 9:00 p.m. · domingo cerrado",
+  "direccion": "Calle Duarte 45, Centro, La Romana",
+  "pagos": "efectivo, transferencia y tárjeta al recoger",
+  "servicios": [
+    { "nombre": "Pollo guisado con moro", "precio": "RD$350", "nota": "almuerzo" },
+    { "nombre": "Sancocho de pollo", "precio": "RD$450", "nota": "fines de semana" },
+    { "nombre": "Chivo guisado", "precio": "RD$550", "nota": "para 2" },
+    { "nombre": "Flan casero", "precio": "RD$120" }
+  ]
+}
